@@ -7,6 +7,7 @@
 \def\juniv#1{\gdef\@juniv{#1}}
 \def\jfaculty#1{\gdef\@jfaculty{#1}}
 \def\jauthor#1{\gdef\@jauthor{#1}}
+\def\jnumber#1{\gdef\@jnumber{#1}}
 \def\jadvisor#1#2{\gdef\@jadvisor{#1}\gdef\@jposition{#2}}
 \def\jchief#1#2{\gdef\@jchief{#1}\gdef\@jpositions{#2}}
 \def\jhyear#1{\gdef\@jhyear{#1}}
@@ -17,6 +18,7 @@
 \def\euniv#1{\gdef\@euniv{#1}}
 \def\efaculty#1{\gdef\@efaculty{#1}}
 \def\eauthor#1{\gdef\@eauthor{#1}}
+\def\enumber#1{\gdef\@enumber{#1}}
 \def\eadvisor#1#2{\gdef\@eposition{#1}\gdef\@eadvisor{#2}}
 \def\echief#1#2{\gdef\@epositions{#1}\gdef\@echief{#2}}
 \def\eyear#1{\gdef\@eyear{#1}}
@@ -63,7 +65,9 @@
 		\end{lineskiptitle}
 		\vfill
 		{\Large \@juniv\ \@jfaculty}
-		\vspace{0.5cm}\par
+		\vspace{1cm}\par
+		{\Large \@jnumber}
+		\vspace{0.2cm}\par
 		{\LARGE \@jauthor}
 		\vspace{2cm}\par
 		{\Large 指導教官：\ \@jadvisor\ \@jposition}
@@ -93,6 +97,8 @@
 		\vfill
 		{\Large \@euniv\ \@efaculty}
 		\vspace{0.5cm}\par
+		{\Large \@enumber}
+		\vspace{0.2cm}\par
 		{\LARGE \@eauthor}
 		\vspace{2cm}\par
 		{\Large Supervisor\ : \ \@eposition\ \@eadvisor}
