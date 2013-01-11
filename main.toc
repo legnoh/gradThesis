@@ -4,9 +4,9 @@
 \contentsline {chapter}{\numberline {第2章}MashupとWebAPI}{3}
 \contentsline {section}{\numberline {2.1}Mashupとは}{3}
 \contentsline {section}{\numberline {2.2}WebAPIとは}{3}
-\contentsline {subsection}{\numberline {2.2.1}Yahoo!検索Web API-ウェブ検索API\let \reserved@d =[\def \par }{3}
-\contentsline {subsection}{\numberline {2.2.2}Yahoo!検索Web API-画像検索API\let \reserved@d =[\def \par }{3}
-\contentsline {subsection}{\numberline {2.2.3}Youtube Data API}{4}
+\contentsline {subsection}{\numberline {2.2.1}Yahoo!検索Web API-ウェブ検索API}{3}
+\contentsline {subsection}{\numberline {2.2.2}Yahoo!検索Web API-画像検索API}{3}
+\contentsline {subsection}{\numberline {2.2.3}Youtube Data API}{3}
 \contentsline {subsection}{\numberline {2.2.4}Product Advertising API}{4}
 \contentsline {chapter}{\numberline {第3章}検索エンジンの精度向上}{5}
 \contentsline {section}{\numberline {3.1}先行研究}{5}

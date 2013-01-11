@@ -5,16 +5,16 @@
 Mashupとは、2つ以上のWebAPIを組み合わせて１つのWebサービスやアプリケーションを構成する手法のことである。元来、利用価値の高いWebサービスを作るためには、独自に検索エンジンや結果応答用のサーバを構築する必要があり、目的のWebサービスを作るために多大な努力をする必要があった。しかし、Mashupでは、既存のWebサービスを組み合わせることにより、短期間で価値の高いWebサービスを製作することができる。
 \section{WebAPIとは}
 WebAPIとは、インターネットを介して利用することのできるアプリケーション・プログラミング・インターフェイス(API)のことである。殆どのWebAPIが一般的なURLの形式を取っており、HTTPによるPOSTメソッドを用いて、パラメータを付加したURLを使用してアクセスしてデータを取得する。返ってくるデータはXML、JSONのどちらかが一般的である。今回用いるWebAPIは、以下の４つである。
-\subsection{Yahoo!検索Web API-ウェブ検索API\footnote{ウェブ検索APIは、2013年3月頃を目処にAPIのリクエストURLが変更される予定であり、これはそれまで公開されていたアップグレード版ウェブ検索APIを使用している。}}
+\subsection{Yahoo!検索Web API-ウェブ検索API}
 \begin{tabular}{c|l}
 開発 & ヤフー株式会社\\
-URL & http://search.yahooapis.jp/PremiumWebSearchService/V1/webSearch\\
+URL & http://search.yahooapis.jp/PremiumWebSearchService/V1/webSearch\footnote{ウェブ検索APIは、2013年3月頃を目処にAPIのリクエストURLが変更される予定であり、これはそれまで公開されていたアップグレード版ウェブ検索APIを使用している。}\\
 機能 & Web上に公開されているページを検索する
 \end{tabular}
-\subsection{Yahoo!検索Web API-画像検索API\footnote{画像検索APIは、2013年3月頃を目処にAPIのリクエストURLが変更される予定であり、これはそれまで公開されていたアップグレード版画像検索APIを使用している。}}
+\subsection{Yahoo!検索Web API-画像検索API}
 \begin{tabular}{c|l}
 開発 & ヤフー株式会社\\
-URL & http://search.yahooapis.jp/PremiumImageSearchService/V1/imageSearch\\
+URL & http://search.yahooapis.jp/PremiumImageSearchService/V1/imageSearch\footnote{画像検索APIは、2013年3月頃を目処にAPIのリクエストURLが変更される予定であり、これはそれまで公開されていたアップグレード版画像検索APIを使用している。}\\
 機能 & Web上に公開されている画像を検索する
 \end{tabular}
 \subsection{Youtube Data API}
