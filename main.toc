@@ -6,42 +6,42 @@
 \contentsline {section}{\numberline {2.2}WebAPIとは}{3}
 \contentsline {subsection}{\numberline {2.2.1}Yahoo!検索Web API-ウェブ検索API}{3}
 \contentsline {subsection}{\numberline {2.2.2}Yahoo!検索Web API-画像検索API}{3}
-\contentsline {subsection}{\numberline {2.2.3}Youtube Data API}{3}
+\contentsline {subsection}{\numberline {2.2.3}Youtube Data API}{4}
 \contentsline {subsection}{\numberline {2.2.4}Product Advertising API}{4}
 \contentsline {chapter}{\numberline {第3章}検索エンジンの精度向上}{5}
 \contentsline {section}{\numberline {3.1}先行研究}{5}
-\contentsline {subsection}{\numberline {3.1.1}e-learningコンテンツにおけるドキュメントサーチの最適化}{5}
+\contentsline {subsection}{\numberline {3.1.1}e-learningコンテンツにおけるドキュメントサーチの最適化\cite {docsearch}}{5}
 \contentsline {section}{\numberline {3.2}サブキーワードの選出}{5}
 \contentsline {subsection}{\numberline {3.2.1}選出過程}{5}
 \contentsline {subsection}{\numberline {3.2.2}選出結果}{5}
 \contentsline {chapter}{\numberline {第4章}WWW視覚化}{6}
 \contentsline {section}{\numberline {4.1}開発事例}{6}
 \contentsline {subsection}{\numberline {4.1.1}納豆ビュー}{6}
-\contentsline {subsection}{\numberline {4.1.2}Flowser.com}{6}
+\contentsline {subsection}{\numberline {4.1.2}Flowser}{6}
 \contentsline {section}{\numberline {4.2}検索エンジンにおけるWWW視覚化}{8}
-\contentsline {subsection}{\numberline {4.2.1}Helix model}{8}
-\contentsline {subsection}{\numberline {4.2.2}Star model}{8}
-\contentsline {subsection}{\numberline {4.2.3}Star-Helix model}{8}
-\contentsline {subsection}{\numberline {4.2.4}Star-Slide model}{9}
-\contentsline {section}{\numberline {4.3}採用手法}{9}
-\contentsline {chapter}{\numberline {第5章}開発手法}{10}
-\contentsline {section}{\numberline {5.1}概観}{10}
-\contentsline {section}{\numberline {5.2}Away3D}{10}
-\contentsline {subsection}{\numberline {5.2.1}Away3Dとは}{10}
-\contentsline {subsection}{\numberline {5.2.2}Android上への移植}{10}
-\contentsline {chapter}{\numberline {第6章}Androidアプリ「LEDOXEA」}{11}
-\contentsline {section}{\numberline {6.1}使用方法}{11}
-\contentsline {section}{\numberline {6.2}特徴}{11}
-\contentsline {subsection}{\numberline {6.2.1}移植性}{11}
-\contentsline {subsection}{\numberline {6.2.2}スペック性能への非依存性}{11}
-\contentsline {subsection}{\numberline {6.2.3}フリック操作による直感的操作性}{11}
-\contentsline {subsection}{\numberline {6.2.4}検索エンジンの同時検索、WWW視覚化}{11}
-\contentsline {chapter}{\numberline {第7章}アンケートによる評価と考察}{12}
-\contentsline {section}{\numberline {7.1}評価結果}{12}
-\contentsline {section}{\numberline {7.2}考察}{12}
-\contentsline {chapter}{\numberline {第8章}結論}{13}
-\contentsline {chapter}{謝辞}{14}
-\contentsline {chapter}{参考文献}{15}
-\contentsline {chapter}{\numberline {付 録A }プログラム}{16}
-\contentsline {section}{\numberline {A.1}main.as(ActionScript)}{16}
-\contentsline {section}{\numberline {A.2}app.xml(XML)}{16}
+\contentsline {subsection}{\numberline {4.2.1}Helixモデル}{8}
+\contentsline {subsection}{\numberline {4.2.2}Starモデル}{8}
+\contentsline {subsection}{\numberline {4.2.3}Star-Helixモデル}{8}
+\contentsline {subsection}{\numberline {4.2.4}Star-Slideモデル}{12}
+\contentsline {section}{\numberline {4.3}採用手法}{12}
+\contentsline {chapter}{\numberline {第5章}開発手法}{13}
+\contentsline {section}{\numberline {5.1}概観}{13}
+\contentsline {section}{\numberline {5.2}Away3D}{13}
+\contentsline {subsection}{\numberline {5.2.1}Away3Dとは}{13}
+\contentsline {subsection}{\numberline {5.2.2}Android上への移植}{13}
+\contentsline {chapter}{\numberline {第6章}Androidアプリ「LEDOXEA」}{14}
+\contentsline {section}{\numberline {6.1}使用方法}{14}
+\contentsline {section}{\numberline {6.2}特徴}{14}
+\contentsline {subsection}{\numberline {6.2.1}移植性}{14}
+\contentsline {subsection}{\numberline {6.2.2}スペック性能への非依存性}{14}
+\contentsline {subsection}{\numberline {6.2.3}フリック操作による直感的操作性}{14}
+\contentsline {subsection}{\numberline {6.2.4}検索エンジンの同時検索、WWW視覚化}{14}
+\contentsline {chapter}{\numberline {第7章}アンケートによる評価と考察}{15}
+\contentsline {section}{\numberline {7.1}評価結果}{15}
+\contentsline {section}{\numberline {7.2}考察}{15}
+\contentsline {chapter}{\numberline {第8章}結論}{16}
+\contentsline {chapter}{謝辞}{17}
+\contentsline {chapter}{参考文献}{18}
+\contentsline {chapter}{\numberline {付 録A }プログラム}{19}
+\contentsline {section}{\numberline {A.1}main.as(ActionScript)}{19}
+\contentsline {section}{\numberline {A.2}app.xml(XML)}{19}
