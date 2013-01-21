@@ -2,9 +2,9 @@
 実装したActionScriptのソースコード、並びにAndroidアプリを定義するxmlファイルを掲載する。実装はFlashProfessionalCS6を用いて、Android2.2端末(IS04)での動作を確認している。
 また、このプログラムのパブリッシュ、デバッグのためには以下のライブラリ、フレームワーク、画像ファイルが必要となるため、導入・設定の後実行する必要がある。
 \begin{itemize}
-\item Away3D 4.1.0 Alpha (away3d-core-fp11\_4\_1\_0\_Alpha.swc)
-\item BulkLoader (bulk\_loader.swc)
-\item as3crypto (as3crypto.swc)
+\item Away3D 4.1.0 Alpha (away3d-core-fp11\_4\_1\_0\_Alpha.swc)\cite{away3d}
+\item Bulk Loader (bulk\_loader.swc)\cite{bulkloader}
+\item As3 Crypto (as3crypto.swc)\cite{as3crypto}
 \item star.png (256x256px のpngファイル)
 \item pdf.png (128x128px のpngファイル)
 \end{itemize}
@@ -504,7 +504,7 @@ package {
 			var url = "http://search.yahooapis.jp/PremiumWebSearchService/V1/webSearch?"
 			+"appid=LFTNFXWxg66eYMmIvFGGF1qZLo8V8HMPgqMou_HBPPhe4p5LSNCf.lkFBRjKNtE-&"
 			+"results=20&"
-			+"query=基礎+" + text_field.text;
+			+"query=" + text_field.text + " 基礎 OR 講座";
 			
 			var loader:URLLoader = new URLLoader();
 			var request:URLRequest=new URLRequest(url);
@@ -544,7 +544,7 @@ package {
 			var url = "http://search.yahooapis.jp/PremiumImageSearchService/V1/imageSearch?"
 			+ "appid=LFTNFXWxg66eYMmIvFGGF1qZLo8V8HMPgqMou_HBPPhe4p5LSNCf.lkFBRjKNtE-&"
 			+ "results=20&"
-			+ "query=基礎" + text_field.text;
+			+ "query=" + text_field.text + " 基礎 OR 講座";
 			
 			var loader:URLLoader = new URLLoader();
 			var request:URLRequest=new URLRequest(url);
@@ -620,7 +620,7 @@ package {
 			+ "appid=LFTNFXWxg66eYMmIvFGGF1qZLo8V8HMPgqMou_HBPPhe4p5LSNCf.lkFBRjKNtE-&"
 			+ "results=20&"
 			+ "format=pdf&"
-			+ "query=" + text_field.text;
+			+ "query=" + text_field.text + " 基礎 OR 講座";
 			
 			var loader:URLLoader = new URLLoader();
 			var request:URLRequest=new URLRequest(url);
@@ -657,7 +657,7 @@ package {
 			//リクエストURL
 			var url = "http://gdata.youtube.com/feeds/api/videos?"
 			+ "max-results=20&"
-			+ "q=基礎"+escape("+")+text_field.text;
+			+ "q=" + text_field.text + " 基礎 OR 講座";
 			
 			var loader:URLLoader = new URLLoader();
 			var request:URLRequest=new URLRequest(url);
@@ -743,7 +743,7 @@ package {
 			
 			var query:String = "AWSAccessKeyId=AKIAJEEDDCG5F452QBHA&"
 			+ "AssociateTag=lyok-22&"
-			+ "Keywords="+escapeMultiByte("test+")+ escapeMultiByte(text_field.text) + "&"
+			+ "Keywords="+ escapeMultiByte(text_field.text)+"&"
 			+ "Operation=ItemSearch&"
 			+ "ResponseGroup=Medium&"
 			+ "SearchIndex=Books&"
