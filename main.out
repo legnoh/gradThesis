@@ -1,0 +1,49 @@
+\BOOKMARK [0][-]{chapter*.1}{目 次}{}% 1
+\BOOKMARK [0][-]{chapter.1}{序論}{}% 2
+\BOOKMARK [1][-]{section.1.1}{背景}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.2}{本文書の構成}{chapter.1}% 4
+\BOOKMARK [0][-]{chapter.2}{MashupとWebAPI}{}% 5
+\BOOKMARK [1][-]{section.2.1}{Mashupとは}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.2}{WebAPIとは}{chapter.2}% 7
+\BOOKMARK [2][-]{subsection.2.2.1}{Yahoo!検索Web API-ウェブ検索API}{section.2.2}% 8
+\BOOKMARK [2][-]{subsection.2.2.2}{Yahoo!検索Web API-画像検索API}{section.2.2}% 9
+\BOOKMARK [2][-]{subsection.2.2.3}{Youtube Data API}{section.2.2}% 10
+\BOOKMARK [2][-]{subsection.2.2.4}{Product Advertising API}{section.2.2}% 11
+\BOOKMARK [0][-]{chapter.3}{検索エンジンの精度向上}{}% 12
+\BOOKMARK [1][-]{section.3.1}{先行研究}{chapter.3}% 13
+\BOOKMARK [2][-]{subsection.3.1.1}{e-learningコンテンツにおけるドキュメントサーチの最適化docsearch}{section.3.1}% 14
+\BOOKMARK [1][-]{section.3.2}{サブキーワードの選出}{chapter.3}% 15
+\BOOKMARK [2][-]{subsection.3.2.1}{選出過程}{section.3.2}% 16
+\BOOKMARK [2][-]{subsection.3.2.2}{選出結果}{section.3.2}% 17
+\BOOKMARK [0][-]{chapter.4}{WWW視覚化}{}% 18
+\BOOKMARK [1][-]{section.4.1}{開発事例}{chapter.4}% 19
+\BOOKMARK [2][-]{subsection.4.1.1}{納豆ビュー}{section.4.1}% 20
+\BOOKMARK [2][-]{subsection.4.1.2}{Flowser}{section.4.1}% 21
+\BOOKMARK [1][-]{section.4.2}{検索エンジンにおけるWWW視覚化}{chapter.4}% 22
+\BOOKMARK [2][-]{subsection.4.2.1}{Helixモデル}{section.4.2}% 23
+\BOOKMARK [2][-]{subsection.4.2.2}{Starモデル}{section.4.2}% 24
+\BOOKMARK [2][-]{subsection.4.2.3}{Star-Helixモデル}{section.4.2}% 25
+\BOOKMARK [2][-]{subsection.4.2.4}{Star-Slideモデル}{section.4.2}% 26
+\BOOKMARK [1][-]{section.4.3}{採用手法}{chapter.4}% 27
+\BOOKMARK [0][-]{chapter.5}{開発手法}{}% 28
+\BOOKMARK [1][-]{section.5.1}{概観}{chapter.5}% 29
+\BOOKMARK [1][-]{section.5.2}{Away3D}{chapter.5}% 30
+\BOOKMARK [2][-]{subsection.5.2.1}{Away3Dとは}{section.5.2}% 31
+\BOOKMARK [2][-]{subsection.5.2.2}{Android上への移植}{section.5.2}% 32
+\BOOKMARK [0][-]{chapter.6}{Androidアプリ「LEDOXEA」}{}% 33
+\BOOKMARK [1][-]{section.6.1}{使用方法}{chapter.6}% 34
+\BOOKMARK [1][-]{section.6.2}{特徴}{chapter.6}% 35
+\BOOKMARK [2][-]{subsection.6.2.1}{移植性}{section.6.2}% 36
+\BOOKMARK [2][-]{subsection.6.2.2}{スペック性能への非依存性}{section.6.2}% 37
+\BOOKMARK [2][-]{subsection.6.2.3}{フリック操作による直感的操作性}{section.6.2}% 38
+\BOOKMARK [2][-]{subsection.6.2.4}{検索エンジンの同時検索、WWW視覚化}{section.6.2}% 39
+\BOOKMARK [0][-]{chapter.7}{アンケートによる評価と考察}{}% 40
+\BOOKMARK [1][-]{section.7.1}{評価結果}{chapter.7}% 41
+\BOOKMARK [1][-]{section.7.2}{考察}{chapter.7}% 42
+\BOOKMARK [0][-]{chapter.8}{結論}{}% 43
+\BOOKMARK [0][-]{chapter.8}{謝辞}{}% 44
+\BOOKMARK [0][-]{chapter*.2}{参考文献}{}% 45
+\BOOKMARK [0][-]{chapter*.3}{参考文献}{}% 46
+\BOOKMARK [0][-]{appendix.A}{プログラム}{}% 47
+\BOOKMARK [1][-]{section.A.1}{main.as\(ActionScript・2013年1月16日現在\)}{appendix.A}% 48
+\BOOKMARK [1][-]{section.A.2}{app.xml\(XML\)}{appendix.A}% 49
