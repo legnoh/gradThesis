@@ -25,22 +25,22 @@
 \def\ekeyword#1{\gdef\@ekeyword{#1}}
 
 % 余白設定（左右対称）
-\setlength{\textwidth}{15.92cm}
-\setlength{\oddsidemargin}{0mm}
-\setlength{\evensidemargin}{0mm}
-\setlength{\topmargin}{-1cm}
-\setlength{\textheight}{23.5cm}
-\setlength{\footskip}{18mm}
+%\setlength{\textwidth}{180mm}
+%\setlength{\oddsidemargin}{0mm}
+%\setlength{\evensidemargin}{0mm}
+%\setlength{\topmargin}{-35mm}
+%\setlength{\textheight}{277mm}
+%\setlength{\footskip}{18mm}
 
 % 余白設定（左綴じ用）
-\newcommand{\bindermode}{%
-	\setlength{\textwidth}{15cm}
-	\setlength{\oddsidemargin}{13mm}
-	\setlength{\evensidemargin}{13mm}
-	\setlength{\topmargin}{-1cm}
-	\setlength{\textheight}{23.5cm}
-	\setlength{\footskip}{18mm}
-}
+%\newcommand{\bindermode}{%
+%	\setlength{\textwidth}{15cm}
+%	\setlength{\oddsidemargin}{13mm}
+%	\setlength{\evensidemargin}{13mm}
+%	\setlength{\topmargin}{-1cm}
+%	\setlength{\textheight}{23.5cm}
+%	\setlength{\footskip}{18mm}
+%}
 
 % 表紙用行間広め定義
 \newenvironment{lineskiptitle}{%
@@ -56,7 +56,7 @@
 \def\@jmaketitle{%
 	\thispagestyle{empty}
 	\begin{center}
-		{\Large 平成\@jhyear 年度}
+		{\Large 平成\@jhyear 年2月1日}
 		\vspace{0.5cm}\par
 		{\Large \@jclass}
 		\vfill
@@ -87,7 +87,7 @@
 \def\@emaketitle{%
 	\thispagestyle{empty}
 	\begin{center}
-		{\Large Year\ \@eyear}
+		{\Large February\ 1,\ \@eyear}
 		\vspace{0.5cm}\par		
 		{\Large \@eclass}
 		\vfill
@@ -95,7 +95,7 @@
 		{\Huge\sf \@etitle}
 		\end{lineskiptitle}
 		\vfill
-		{\Large \@euniv\ \@efaculty}
+		{\Large \@efaculty ,\@euniv}
 		\vspace{0.5cm}\par
 		{\Large \@enumber}
 		\vspace{0.2cm}\par

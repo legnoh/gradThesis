@@ -23,6 +23,7 @@
 	\documentclass[11pt]{report}
 	\newcommand{\acknowledgmentname}{Acknowledgment}
 \fi
+\usepackage[top=30truemm,bottom=30truemm,left=25truemm,right=25truemm]{geometry}
 \usepackage{ascmac}
 \usepackage{graphicx}
 \usepackage{multirow}
@@ -33,27 +34,29 @@
     <10.95><12><14.4><17.28><20.74><24.88> tmin10 <-> tmin10}{}
 \usepackage{times}
 \usepackage[stable]{footmisc}
+\usepackage{otf}
+\usepackage{epsf}
 
-\bindermode	% バインダ用余白設定
+%\bindermode	% バインダ用余白設定
 
 % 日本語情報（必要なら）
 \jclass	{卒業論文}							% 論文種別
-\jtitle		{Mashupによるe-learningコンテンツ検索表示}			% タイトル。改行する場合は\\を入れる
+\jtitle		{Mashup による e-learning コンテンツ検索システムの開発}			% タイトル。改行する場合は\\を入れる
 \juniv		{佐賀大学}						% 大学名
 \jfaculty	{理工学部知能情報システム学科}				% 学部、学科
-\jauthor	{甲斐 遼馬}						% 著者
+\jauthor	{甲斐 \UTF{F9C3}馬}						% 著者 \CID{7808}でも同字が出る
 \jnumber	{08233014}						% 学籍番号
 \jadvisor	{新井 康平}{教授}					% 指導教官、形式は『{名前}{肩書}』
 \jchief	{渡邉 義明}{教授}					% 学科長名、形式は『{名前}{肩書}』
-\jhyear	{24}								% 平成○年度
-\jsyear	{2012}							% 西暦○年度
-\jkeyword	{mashup、Android、e-learning}			% 論文のキーワード
+\jhyear	{25}								% 平成○年度
+\jsyear	{2013}							% 西暦○年度
+\jkeyword	{Mashup、Android、e-learning}			% 論文のキーワード
 
 % 英語情報（必要なら）
 \eclass	{Graduation Thesis}					% 論文種別
-\etitle		{The develop of e-learning contents viewer by “Mashup”}	% タイトル。改行する場合は\\を入れる
+\etitle		{Development of e-learning content search system by Mashup}	% タイトル。改行する場合は\\を入れる
 \euniv	{Saga University}						% 大学名
-\efaculty	{Department of Information Science, Faculty of Science and Engineering, Saga University}	% 学部、学科
+\efaculty	{Department of Information Science, Faculty of Science and Engineering}	% 学部、学科
 \eauthor	{Ryoma KAI}					% 著者
 \enumber	{08233014}						% 学籍番号
 \eadvisor	{Professor}{Kohei ARAI}				% 指導教官、形式は『{肩書}{名前}』
