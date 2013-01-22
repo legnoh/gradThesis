@@ -5,11 +5,18 @@
 \item Away3D 4.1.0 Alpha (away3d-core-fp11\_4\_1\_0\_Alpha.swc)\cite{away3d}
 \item Bulk Loader (bulk\_loader.swc)\cite{bulkloader}
 \item As3 Crypto (as3crypto.swc)\cite{as3crypto}
-\item star.png (256x256px のpngファイル)
-\item pdf.png (128x128px のpngファイル)
+\item norm-top.png (128x128px のpngファイル)
+\item norm.png (128x128px のpngファイル)
+\item img-top.png (128x128px のpngファイル)
+\item img.png (128x128px のpngファイル)
+\item doc-top.png (128x128px のpngファイル)
+\item doc.png (128x128px のpngファイル)
+\item mv-top.png (128x128px のpngファイル)
+\item ama-top.png (128x128px のpngファイル)
+\item ama.png (128x128px のpngファイル)
 \end{itemize}
 
-\section{main.as(ActionScript・2013年1月16日現在)}
+\section{main.as(ActionScript3.0)}
 {\scriptsize
 \begin{verbatim}
 package {
@@ -42,7 +49,7 @@ package {
 	Away3DによるWWW可視化、Androidによる縦横方向への操作可能
 	@author Ryoma Kai
 	---------------------------------------------------------------------*/
-	public class Main extends View3D {
+	public class Main extends Sprite {
 		
 		private var view:View3D;
 		private var text_field:TextField;
@@ -59,7 +66,7 @@ package {
 		private var imgXML:XML;
 		private var docXML:XML;
 		private var mvXML:XML;
-		private var amaXML:XML;
+		private var amaXML:Array;
 		private var normNS:Namespace;
 		private var imgNS:Namespace;
 		private var docNS:Namespace;
@@ -67,13 +74,13 @@ package {
 		private var amaNS:Namespace;
 		private var media:Namespace;
 		private var imgs:BulkLoader;
+		private var yThumbLoader:BulkLoader;
 		private var num:int;
 		private var col:String;
 		private var startZ:int;
-
+		
 		public function Main():void {
-
-			/****ここから検索ボックス、検索結果の文章表示部まわりの描画****/
+			
 			text_field = new TextField();
 			title_field = new TextField();
 			disc_field = new TextField();
@@ -84,27 +91,25 @@ package {
 			over = new State(0xFF4500,stage.stageWidth*0.2);
 			starPoints = new Array();
 			keyword = new String();
-			num = new int();
 			num = 0;
-			startZ = new int();
 			startZ = -200;
-			col = new String;
 			col = "norm";
 			
 			normXML = new XML();
 			imgXML = new XML();
 			docXML = new XML();
 			mvXML = new XML();
-			amaXML = new XML();
-			imgs =new BulkLoader();
-			
+			amaXML = new Array();
 			normNS = new Namespace("urn:yahoo:jp:srch");
 			imgNS = new Namespace("urn:yahoo:jp:srchmi");
 			docNS = new Namespace("urn:yahoo:jp:srch");
 			mvNS = mvXML.namespace("");
 			media = mvXML.namespace("media");
 			amaNS = new Namespace("http://webservices.amazon.com/AWSECommerceService/2011-08-01");
+			imgs =new BulkLoader();
+			yThumbLoader = new BulkLoader();
 			
+			/****ここから検索ボックス、検索結果の文章表示部まわりの描画****/
 			
 			//検索ボックス、ボタン、結果表示部の２行をステージに乗せて、フォーマット・スタイル定義
 			setSearchBox();
@@ -119,89 +124,52 @@ package {
 			makeButton();
 			
 			/****ここからAway3D系の描画処理****/
-			backgroundColor=0xFFFFFF;// 背景を白色に
-			camera.lens.far=10000;// 遠くも見えるように設定
+			view = new View3D();
+			addChild(view);
+			view.backgroundColor=0xFFFFFF;// 背景を白色に
+			view.camera.lens.far=10000;// 遠くも見えるように設定
 			
-			// 線を作成
-			var lines:SegmentSet = new SegmentSet();
-			scene.addChild(lines);
+			addEventListener(Event.ENTER_FRAME, function(e:Event){ view.render(); });
+			addEventListener(TransformGestureEvent.GESTURE_SWIPE, moveCamera );
 			
-			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
-			addEventListener(TransformGestureEvent.GESTURE_SWIPE, moveCamera);
-		}
-
-		/**view3D空間のレンダリングを行う*/
-		private function enterFrameHandler(e:Event):void {
-
-			camera.x = 0;
-			camera.z = 2000;
-			camera.y = 0;
-			camera.lookAt(new Vector3D(0, 0, 0));
-			render();
-		}
-		
-		/**検索ボタン押下直後の初期位置までのレンダリング(カメラの初期位置移動)*/
-		private function enterSearch(e:Event){
-			camera.x = 0;
-			camera.y = 1600;
-			camera.z = -200;
-			camera.lookAt(new Vector3D(0,0,-200));
-			camera.rotationY = 0;
-
-			render();
-			
-			removeEventListener(Event.ENTER_FRAME, enterSearch);
-			addEventListener(Event.ENTER_FRAME, enterMoveCamera);
-		}
-		
-		private function enterMoveCamera(e:Event){
-			render();
+			// XMLをロードより早く書き換える関係上、こっそり先にローカルのXMLを読み込んでおく
+			var imgLoader:URLLoader = new URLLoader(new URLRequest("defImgXML.xml"));
+			imgLoader.addEventListener(
+			"complete", function(e:Event):void { imgXML = XML(imgLoader.data); });
 		}
 		
 		/**検索結果表示後、スワイプに合わせてカメラの移動*/
 		private function moveCamera(e:TransformGestureEvent):void{
-
-			var cameraRot:Array = new Array(); // カメラの回転角を保持する行列
 			
 			//どの方向にスワイプしたかを判定
 			if (e.offsetY == -1) {
 				
 				//下から上へスワイプした場合、19個目の検索結果でない場合、下の項目へ移動
-				if (num!=19){
+				if (num < 19){
 					
 					//下の要素へ参照を移動
 					num++;
 					
 					//カメラ位置の変更・1フレーム毎のレンダリング処理
 					for (var i:int=0; i<10; i++) {
-						cameraRot = [camera.rotationX,camera.rotationY,camera.rotationZ];
-						camera.z-=20;
+						view.camera.z-=20;
 						startZ-=20;
-						camera.lookAt(new Vector3D(0,0,startZ));
-						camera.rotationX = cameraRot[0];
-						camera.rotationY = cameraRot[1];
-						camera.rotationZ = cameraRot[2];
-						render();
+						setRotation();
 					}
 				}
 			} else if (e.offsetY == 1) {
 				
 				//上から下にスワイプした場合、numが0でないならば、上の項目へ移動
-				if (num!=0) {
+				if (num > 0) {
 					
 					//上の要素へ参照を移動
 					num--;
 					
 					//カメラ位置の変更・1フレーム毎のレンダリング処理
 					for (var j:int=0; i<10; i++) {
-						cameraRot = [camera.rotationX,camera.rotationY,camera.rotationZ];
-						camera.z += 20;
+						view.camera.z += 20;
 						startZ += 20;
-						camera.lookAt(new Vector3D(0,0,startZ));
-						camera.rotationX = cameraRot[0];
-						camera.rotationY = cameraRot[1];
-						camera.rotationZ = cameraRot[2];
-						render();
+						setRotation();
 					}
 				}
 				
@@ -212,56 +180,31 @@ package {
 					
 					//Yahoo!検索結果の列ならYoutube検索結果の列へ遷移
 					col="mv";
-					camera.x = -1521;
-					camera.y = 494;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = 90;
-					camera.rotationY = 0;
-					camera.rotationZ = 72;
+					cameraSwipeRotate(0, 72);
 				
 				}else if(col=="img"){
 					
 					//画像検索結果の列ならYahoo!検索結果の列へ遷移
 					col="norm";
-					camera.x = 0;
-					camera.y = 1600;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = 90;
-					camera.rotationY = 0;
-					camera.rotationZ = 0;
+					cameraSwipeRotate(288, 360);
 				
 				}else if(col=="doc"){
 					
 					//ドキュメント検索結果の列なら画像検索結果の列へ遷移
 					col="img";
-					camera.x = 1521;
-					camera.y = 494;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = 90;
-					camera.rotationY = 0;
-					camera.rotationZ = -72;
+					cameraSwipeRotate(216,288);
 					
 				}else if(col=="ama"){
 					
 					//Amazon検索結果の列ならドキュメント検索結果の列へ遷移
 					col="doc";
-					camera.x = 940;
-					camera.y = -1294;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = -90;
-					camera.rotationY = 180;
-					camera.rotationZ = 36;
+					cameraSwipeRotate(144, 216);
 				
 				}else if(col=="mv"){
 					
 					//Youtube検索結果の列ならAmazonの検索結果の列へ遷移
 					col="ama";
-					camera.x = -940;
-					camera.y = -1294;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = -90;
-					camera.rotationY = 180;
-					camera.rotationZ = -36;
+					cameraSwipeRotate(72, 144);
 				}
 				
 			} else if(e.offsetX==-1){
@@ -271,64 +214,77 @@ package {
 					
 					//Youtubeの検索結果の列ならYahoo!検索結果の列へ遷移
 					col="norm";
-					camera.x = 0;
-					camera.y = 1600;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = 90;
-					camera.rotationY = 0;
-					camera.rotationZ = 0;
+					cameraSwipeRotate(72, 0);
 				
 				}else if(col=="norm"){
 					
 					//Yahoo!検索結果の列なら画像検索結果の列へ遷移
 					col="img";
-					//Imgへの遷移(確定)
-					camera.x = 1521;
-					camera.y = 494;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = 90;
-					camera.rotationY = 0;
-					camera.rotationZ = -72;
+					cameraSwipeRotate(360, 288);
 				
 				}else if(col=="img"){
 					
 					//画像検索結果の列ならドキュメント検索結果の列へ遷移
 					col="doc";
-					camera.x = 940;
-					camera.y = -1294;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = -90;
-					camera.rotationY = 180;
-					camera.rotationZ = 36;
+					cameraSwipeRotate(288, 216);
 				
 				}else if(col=="doc"){
 					
 					//ドキュメント検索結果の列ならAmazonの検索結果の列へ遷移
 					col="ama";
-					camera.x = -940;
-					camera.y = -1294;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = -90;
-					camera.rotationY = 180;
-					camera.rotationZ = -36;
+					cameraSwipeRotate(216, 144);
 				
 				}else if(col=="ama"){
 					
 					//AmazonならYoutubeの検索結果列へ遷移
 					col="mv";
-					camera.x = -1521;
-					camera.y = 494;
-					camera.lookAt(new Vector3D(0,0,camera.z));
-					camera.rotationX = 90;
-					camera.rotationY = 0;
-					camera.rotationZ = 72;
+					cameraSwipeRotate(144, 72);
 				}
 			}
 			
 			//タイトル・Disc部分変更・フォーマット上書き
 			rewriteSummary();
 		}
-
+		
+		/**カメラを左右に滑らかに移動する*/
+		public function cameraSwipeRotate(before:int, after:int){
+			
+			if( before < after ){
+				for(before; before <= after+1; before=before+4){
+					view.camera.x = -1 * Math.sin(before * (Math.PI/180) ) * 1600;
+					view.camera.y = Math.cos(before * (Math.PI/180) ) * 1600;
+					setRotation();
+				}
+			}else{
+				for(before; before >= after-1; before=before-4){
+					view.camera.x = -1 * Math.sin(before * (Math.PI/180) ) * 1600;
+					view.camera.y = Math.cos(before * (Math.PI/180) ) * 1600;
+					setRotation();
+				}
+			}
+		}
+		
+		/**カメラの位置から傾きを指定する*/
+		public function setRotation(){
+			if(view.camera.y > 0){
+				view.camera.rotationX = 90;
+				view.camera.rotationY = 0;
+				view.camera.rotationZ = -1 * Math.atan( view.camera.x / view.camera.y ) /( Math.PI / 180);
+			}else if(view.camera.y < 0){
+				view.camera.rotationX = -90;
+				view.camera.rotationY = 180;
+				view.camera.rotationZ = -1 * Math.atan( view.camera.x / view.camera.y ) /( Math.PI / 180);
+			}else{
+				view.camera.rotationX = 90;
+				view.camera.rotationY = 0;
+				view.camera.rotationZ = 90;
+				if(view.camera.x > 0){
+					view.camera.rotationZ *= -1;
+				}
+			}
+			view.render();
+		}
+		
 		/**検索ボックスのフォーマットを定義する*/
 		public function setSearchBox() {
 			stage.addChild(text_field);
@@ -356,7 +312,7 @@ package {
 			text_field.thickness=1;// 文字エッジの太さ
 			text_field.useRichTextClipboard=false;// コピペ時に書式もコピーするか？
 			text_field.wordWrap=false;// 折り返すか？
-			text_field.text="java";
+			text_field.text="";
 		}
 		
 		/**検索結果のタイトル表示スタイルを定義する*/
@@ -386,7 +342,7 @@ package {
 			fmt.bold  = true;
 			fmt.underline = true; // アンダーラインを表示するか？
 			fmt.size  = 40;// 文字のポイントサイズ
-			fmt.color = 0xFF0000;// 文字の色
+			fmt.color = 0x1122CC;// 文字の色
 			fmt.kerning = true;// カーニングが有効か？（埋め込みフォント時のみ動作）
 			fmt.url = uri; // ハイパーリンク先を文字列で指定
 			fmt.target = null; // ハイパーリンク先のターゲットウィンドウ
@@ -417,7 +373,7 @@ package {
 			fmt.font  = "MotoyaLMaru";
 			fmt.size = 35; // 文字サイズ
 			fmt.color = 0x000000; // 文字の色
-			fmt.underline = true; // アンダーラインを表示するか？
+			fmt.underline = false; // アンダーラインを表示するか？
 			fmt.kerning = true; // カーニング有効
 			fmt.url = uri; // ハイパーリンク先を文字列で指定
 			fmt.target = null; // ハイパーリンク先のターゲットウィンドウ
@@ -465,18 +421,27 @@ package {
 			return starPoint;
 		}
 		
-		/**5件のリクエストURLを投げて結果を受け取る*/
+		/**5件の検索をネットワーク越しにぶん投げて結果をXMLで受け取る*/
 		private function onButtonPush(e:MouseEvent):void {
+			
+			//現在のビューを廃棄し、新しいビューを作る
+			removeChild(view);
+			view.dispose();
+			view = new View3D();
+			addChild(view);
+			view.backgroundColor=0xFFFFFF;// 背景を白色に
+			view.camera.lens.far=10000;// 遠くも見えるように設定
+			
 			
 			//星を描く５点の座標を計算する
 			starPoints = makeStar(400,0.5*Math.PI);
 			
-			//星のエッジを描く
-			drawEdge(starPoints[0],starPoints[1],0);
-			drawEdge(starPoints[2],starPoints[3],0);
-			drawEdge(starPoints[4],starPoints[5],0);
-			drawEdge(starPoints[6],starPoints[7],0);
-			drawEdge(starPoints[8],starPoints[9],0);
+			//それぞれの頂点を描く
+			drawEdge(starPoints[0],starPoints[1],0,"norm",true);
+			drawEdge(starPoints[2],starPoints[3],0,"mv",true);
+			drawEdge(starPoints[4],starPoints[5],0,"ama",true);
+			drawEdge(starPoints[6],starPoints[7],0,"doc",true);
+			drawEdge(starPoints[8],starPoints[9],0,"img",true);
 			
 			//加えてノードを描く
 			drawNode(0,0,0,starPoints[0],starPoints[1],0);
@@ -491,10 +456,16 @@ package {
 			docSecrch(1);
 			mvSearch(1);
 			amaSearch(1);
+			amaSearch(2);
 			
-			//カメラの位置をYahoo!検索で持ってきた項目のトップ位置に据える
-			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-			addEventListener(Event.ENTER_FRAME, enterSearch);
+			//カメラの位置をYahoo!検索で持ってきた値のトップに据える
+			num = 0;
+			startZ = -200;
+			col = "norm";
+			view.camera.x = 0;
+			view.camera.y = 1600;
+			view.camera.z = -200;
+			setRotation();
 		}
 		
 		/**Yahoo!検索(通常の検索)を行う*/
@@ -529,8 +500,8 @@ package {
 				
 				
 				//検索結果に対応するノードを20個描画する
-				for(var i=0; i<20;i++){
-					drawEdge(starPoints[0],starPoints[1],(-2000*(page-1))+(-200*i));
+				for(var i:int=0; i<20;i++){
+					drawEdge(starPoints[0],starPoints[1],(-2000*(page-1))+(-200*i)-200,"norm",false);
 				}
 			});
 
@@ -556,60 +527,103 @@ package {
 				.removeNamespace("http://www.w3.org/2001/XMLSchema-instance");
 				
 				//サムネで画像を20個描画する
-				var thumbLoader = new BulkLoader();
-				thumbLoader.add("star.png");
+				
+				yThumbLoader.add("asset/img.png");
 				
 				for(var i:int=0; i<20;i++){
-					thumbLoader.add(imgXML.imgNS::Result[i].imgNS::Url.toString());
+					yThumbLoader.add(imgXML.imgNS::Result[i].imgNS::Url.toString());
 					if(imgXML.imgNS::Result[i+1]==null){break;}
 				}
 				
-				thumbLoader.addEventListener(BulkProgressEvent.COMPLETE, 
-				function(event:BulkProgressEvent):void{
+				yThumbLoader.addEventListener(BulkLoader.COMPLETE,thumbComplete);
+				
+				//失敗しやすいので、エラーの時に次に飛ぶようにしておく
+				yThumbLoader.addEventListener(BulkLoader.ERROR, function (e:ErrorEvent):void{
 					
-					// 画像を表示
-					for(var i:int=0; i<20;i++){
-						var img = imgXML.imgNS::Result[i].imgNS::Url.toString();
-						
-						//.bmp .png .jpg .jpegの拡張子を持つファイル名の正規表現
-						var regPattern:RegExp = /.+(bmp|png|jpg|jpeg)$/i; 
-						
-						// イメージがきちんと拡張子をもっている場合、1024x1024まで引き伸ばしてリサイズ
-						if(regPattern.test(img)){
-							var bmd:BitmapData = thumbLoader.getBitmapData(
-							imgXML.imgNS::Result[i].imgNS::Url.toString()
-							);
-							bmd = resize(bmd,1024/imgXML.imgNS::Result[i].imgNS::Width.toString(),
-							1024/imgXML.imgNS::Result[i].imgNS::Height.toString());
-						}else{
-							bmd = thumbLoader.getBitmapData("star.png");
-						}
-						if(bmd.height!=bmd.width){
-							if(bmd.height > bmd.width){bmd = resize(bmd, bmd.height/bmd.width , 1 ); }
-							else{bmd = resize(bmd, 1 , bmd.width/bmd.height ); }
-							bmd = resize(bmd,1024/bmd.width,1024/bmd.height);
-						}
-						if(bmd.height>256){
-							bmd = resize(bmd,1024/bmd.width,1024/bmd.height);
-						}
-						var texture:BitmapTexture = new BitmapTexture(bmd);
-						var material:TextureMaterial = new TextureMaterial(texture);
-						material.alphaBlending=true;
-						
-						//ビルボード処理
-						var sprite3D:Sprite3D=new Sprite3D(material,170,170);
-						if(img==""){ sprite3D = new Sprite3D(material,200,200); }
-						scene.addChild(sprite3D);
-						sprite3D.x = starPoints[8];
-						sprite3D.y = starPoints[9];
-						sprite3D.z = (-2000*(page-1))+(-200*i)-200;
-						
-						if(imgXML.imgNS::Result[i+1]==null){break;}
-					}
+					var pattern:RegExp = /https?:\/\/[-_.!~*'()\w;\/?:@&=+$,%#]+/gi;
+					var failed:Array = e.text.match(pattern);
+					var failedUrl:String = failed[0];
+					
+					//失敗したファイルをremoveする
+					yThumbLoader.removeFailedItems();
+					
+					//とりあえず今の箇所は空白にして処理し、サイズは基準のサイズに調整しておく
+					imgXML.imgNS::Result.(imgNS::Url==failedUrl).imgNS::Width = 128;
+					imgXML.imgNS::Result.(imgNS::Url==failedUrl).imgNS::Height = 128;
+					imgXML.imgNS::Result.(imgNS::Url==failedUrl).imgNS::Url = "";
 				});
-				thumbLoader.start();
+				
+				yThumbLoader.start();
 			});
 			loader.load(request);
+		}
+		
+		/**Yahoo!画像検索のBulkLoaderが終わった後の処理*/
+		private function thumbComplete(event:BulkProgressEvent):void{
+					
+			// 画像を表示
+			for(var i:int=0; i<20;i++){
+				var img = imgXML.imgNS::Result[i].imgNS::Url.toString(); 
+				var bmdWidth:int = imgXML.imgNS::Result[i].imgNS::Width.toString();
+				var bmdHeight:int = imgXML.imgNS::Result[i].imgNS::Height.toString();
+				var thumbSize:int  = 128;
+				
+				 //.bmp .png .jpg .jpegの拡張子を持つファイル名の正規表現
+				var regPattern:RegExp = /.+(bmp|png|jpg|jpeg)$/i;
+				
+				// イメージがきちんと拡張子をもっている場合
+				// 2の乗数倍でそれを両辺上回るまで引き伸ばしてリサイズ
+				if(regPattern.test(img)){
+					var bmd:BitmapData = yThumbLoader.getBitmapData(img);
+					
+					while (thumbSize < bmdHeight || thumbSize < bmdWidth){
+						thumbSize = thumbSize * 2;
+					}
+					
+					bmd = resize(bmd,thumbSize / bmdWidth, thumbSize / bmdHeight);
+					
+				}else{
+					
+					//持っていない場合、処理不可につきデフォルトの画像で代用
+					bmd = yThumbLoader.getBitmapData("asset/img.png");
+					bmdWidth = 128;
+					bmdHeight = 128;
+				}
+				
+				//1ピクセルズレる時があるので、それを防止するため
+				//両辺のサイズが違う場合、更に実寸サイズを測ってリサイズをかける
+				if(bmd.height!=bmd.width){
+					if(bmd.height > bmd.width){
+						bmd = resize(bmd, bmd.height/bmd.width , 1 );
+					}else{
+						bmd = resize(bmd, 1 , bmd.width/bmd.height );
+					}
+				
+					bmd = resize(bmd, thumbSize * 2 / bmd.width , thumbSize * 2 / bmd.height );
+				}
+				
+				var texture:BitmapTexture = new BitmapTexture(bmd);
+				var material:TextureMaterial = new TextureMaterial(texture);
+				material.alphaBlending=true;
+				
+				//ビルボード処理
+				var sprite3D:Sprite3D=new Sprite3D(material,180,180);
+				
+				if(bmdWidth!=bmdHeight){
+					if(bmdWidth > bmdHeight){
+						sprite3D = new Sprite3D(material, 180, 180 * bmdHeight / bmdWidth ); 
+					}else{
+						sprite3D = new Sprite3D(material, 180 * bmdWidth / bmdHeight, 180 ); 
+					}
+				}
+				
+				view.scene.addChild(sprite3D);
+				sprite3D.x = starPoints[8];
+				sprite3D.y = starPoints[9];
+				sprite3D.z = /**(-2000*(page-1))+*/(-200*i)-200;
+				
+				if(imgXML.imgNS::Result[i+1]==null){break;}
+			}
 		}
 		
 		/**Yahoo!検索(PDFのみ検索)を行う*/
@@ -626,26 +640,14 @@ package {
 			var request:URLRequest=new URLRequest(url);
 			
 			loader.addEventListener(Event.COMPLETE,function(event:Event) {
-				
-				[Embed(source="pdf.png")]
-				var ImageClpdf:Class; // PDFの画像
 									
 				//XMLから名前空間を削除
 				docXML = new XML(event.target.data)
 				.removeNamespace("http://www.w3.org/2001/XMLSchema-instance");
-					
-				var bmd:BitmapData = new ImageClpdf().bitmapData;
-				var texture:BitmapTexture=new BitmapTexture(bmd);
-				var material:TextureMaterial=new TextureMaterial(texture);
-				material.alphaBlending=true;
 				
-				//ビルボード処理をしつつ、20個のノードを描画する
-				for(var i:int=0;i<20;i++){
-					var sprite3D:Sprite3D=new Sprite3D(material,170,170);
-					scene.addChild(sprite3D);
-					sprite3D.x = starPoints[6];
-					sprite3D.y = starPoints[7];
-					sprite3D.z = (-2000*(page-1))+(-200*i)-200;
+				//検索結果に対応するノードを20個描画する
+				for(var i:int=0; i<20;i++){
+					drawEdge(starPoints[6],starPoints[7],(-2000*(page-1))+(-200*i)-200,"doc",false);
 				}
 			});
 			loader.load(request);
@@ -679,7 +681,9 @@ package {
 				
 				// サムネイルのURLをBulkLoaderに追加
 				for(var i:int=0; i<20;i++){
-					thumbLoader.add(mvXML.mvNS::entry[i].media::group.media::thumbnail[2].@url.toString());
+					thumbLoader.add(
+						mvXML.mvNS::entry[i].media::group.media::thumbnail[2].@url.toString()
+					);
 					if(mvXML.mvNS::entry[i+1]==null){break;}
 				}
 				
@@ -688,7 +692,7 @@ package {
 					
 					//画像を表示
 					for(var i:int=0; i<20;i++){
-					
+						
 						//サムネイル画像のURL
 						var img = mvXML.mvNS::entry[i].media::group.media::thumbnail[2].@url.toString();
 						var bmd:BitmapData = thumbLoader.getBitmapData(img);
@@ -717,7 +721,7 @@ package {
 						//ビルボード処理をしつつ、20個のノードをサムネイル画像で描画
 						var sprite3D:Sprite3D=new Sprite3D(material,160,120);
 						if(img==""){ sprite3D = new Sprite3D(material,200,200); }
-						scene.addChild(sprite3D);
+						view.scene.addChild(sprite3D);
 						sprite3D.x = starPoints[2];
 						sprite3D.y = starPoints[3];
 						sprite3D.z = (-2000*(page-1))+(-200*i)-200;
@@ -743,7 +747,8 @@ package {
 			
 			var query:String = "AWSAccessKeyId=AKIAJEEDDCG5F452QBHA&"
 			+ "AssociateTag=lyok-22&"
-			+ "Keywords="+ escapeMultiByte(text_field.text)+"&"
+			+ "ItemPage=" + page + "&"
+			+ "Keywords=" + escapeMultiByte(text_field.text)+"&"
 			+ "Operation=ItemSearch&"
 			+ "ResponseGroup=Medium&"
 			+ "SearchIndex=Books&"
@@ -751,8 +756,11 @@ package {
 			+ "Timestamp=" + escape(timestamp) + "&"
 			+ "Version=2011-08-01";
 			
-			// 署名の生成
+			
+			 // 署名する文書
 			var signatureText:String = ["GET", requestUri, requestPath, query].join("\n");
+			
+			// 署名の生成
 			var signature:String = makeSignature(signatureText, amazonSecretKey);
 			
 			// URLエンコードした署名をクエリの最後に追加して、リクエストURLを完成させる
@@ -762,36 +770,40 @@ package {
 			// amazonへアクセス
 			loader.addEventListener(Event.COMPLETE,function(event:Event) {
 									
-				//XMLから名前空間を削除
-				amaXML = new XML(event.target.data);
+				//XMLをページに分けて配列化
+				amaXML[page-1] = new XML(event.target.data);
 				
 				var thumbLoader = new BulkLoader();
-				thumbLoader.add("star.png");
+				thumbLoader.add("asset/ama.png");
 				
 				for(var i:int=0; i<20;i++){
-					var img = amaXML.amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::URL.toString();
-					if(img!=""){thumbLoader.add(img);}
-					if(amaXML.amaNS::Items.amaNS::Item[i+1]==null){break;}
+					var img = 
+					amaXML[page-1].amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::URL.toString();
+					if(img!=""){
+						thumbLoader.add(img);
+					}
+					if(amaXML[page-1].amaNS::Items.amaNS::Item[i+1]==null){
+						break;
+					}
 				}
 				
-				thumbLoader.addEventListener(BulkProgressEvent.COMPLETE,
-				function(event:BulkProgressEvent):void{
+				thumbLoader.addEventListener(
+				BulkProgressEvent.COMPLETE, function(event:BulkProgressEvent):void{
 											 
-					var bmd = thumbLoader.getBitmapData("star.png");
+					var bmd = thumbLoader.getBitmapData("asset/ama.png");
 					
 					// 商品画像がある場合は、256x256でリサイズする
 					// 無い場合は星画像を代理で使用する
 					for(var i:int=0; i<20;i++){
-						var img = amaXML.amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::URL.toString();
+						var img = amaXML[page-1].amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::URL.toString();
 						
 						if(img!=""){
 							bmd = thumbLoader.getBitmapData(img);
 							bmd = resize(bmd,
-							256/amaXML.amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Width.toString(),
-							256/amaXML.amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Height.toString()
-							);
+								256/amaXML[page-1].amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Width.toString(),
+								256/amaXML[page-1].amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Height.toString());
 						}else{
-							bmd = thumbLoader.getBitmapData("star.png");
+							bmd = thumbLoader.getBitmapData("asset/ama.png");
 						}
 						
 						var texture:BitmapTexture = new BitmapTexture(bmd);
@@ -801,16 +813,16 @@ package {
 						// ビルボード処理しつつ、商品画像のノードを描画する
 						// 商品画像がある場合はそのサイズで、ない場合は星画像の大きさで調整する
 						var sprite3D:Sprite3D= new Sprite3D(material,
-						amaXML.amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Width.toString(),
-						amaXML.amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Height.toString());
-						
+							amaXML[page-1].amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Width.toString(),
+							amaXML[page-1].amaNS::Items.amaNS::Item[i].amaNS::MediumImage.amaNS::Height.toString()
+						);
 						if(img==""){ sprite3D = new Sprite3D(material,200,200); }
-						scene.addChild(sprite3D);
+						view.scene.addChild(sprite3D);
 						sprite3D.x = starPoints[4];
 						sprite3D.y = starPoints[5];
 						sprite3D.z = (-2000*(page-1))+(-200*i)-200;
 						
-						if(amaXML.amaNS::Items.amaNS::Item[i+1]==null){break;}
+						if(amaXML[page-1].amaNS::Items.amaNS::Item[i+1]==null){break;}
 					}
 				});
 				thumbLoader.start();
@@ -849,24 +861,56 @@ package {
 			//colの値がmvならば、numの値で指定された値をSummaryに置き換える
 			else if(col=="mv"){
 				title_field.text = mvXML.mvNS::entry[num].mvNS::title;
-				var testin = mvXML.mvNS::entry[num].mvNS::link.(@rel=="alternate").@href.toString();
 				setTitleFormat(titleFmt,
-				mvXML.mvNS::entry[num].mvNS::link.(@rel=="alternate").@href.toString());
+					mvXML.mvNS::entry[num].mvNS::link.(@rel=="alternate").@href.toString()
+				);
 				disc_field.text = mvXML.mvNS::entry[num].mvNS::content;
 				setDiscriptionFormat(discFmt,
-				mvXML.mvNS::entry[num].mvNS::link.(@rel=="alternate").@href.toString());
+					mvXML.mvNS::entry[num].mvNS::link.(@rel=="alternate").@href.toString()
+				);
 			}
 			
 			//colの値がamaならば、numの値で指定された値をSummaryに置き換える
 			else if(col=="ama"){
-				title_field.text = 
-				amaXML.amaNS::Items.amaNS::Item[num].amaNS::ItemAttributes.amaNS::Title.toString();
-				setTitleFormat(titleFmt,
-				amaXML.amaNS::Items.amaNS::Item[num].amaNS::DetailPageURL);
-				disc_field.text = 
-				amaXML.amaNS::Items.amaNS::Item[num].amaNS::ItemAttributes.amaNS::Author.toString();
-				setDiscriptionFormat(discFmt,
-				amaXML.amaNS::Items.amaNS::Item[num].amaNS::DetailPageURL);
+				
+				var i:int = 0;
+				var amaNum:int = num;
+				//ページ数判定
+				if(amaNum < 10){
+					i = 0;
+				}else{
+					i = 1;
+					amaNum -= 10;
+				}
+				
+				var auth:String = "";
+				
+				if(amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Author[0]!=null){
+					
+					//Author項目を出す
+					auth = 
+					amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Author[0].toString();
+					
+					//Authorが複数いる場合、2人より多い場合は3点リーダで丸める
+					if(amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Author[1]!=null){
+						auth += ", "  + 
+						amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Author[1].toString();
+						if(amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Author[1]!=null){
+							auth += ", …";
+						}
+					}
+				}else{
+					
+					//Authorが無いときはManufactureを使う
+					auth = 
+					amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Manufacturer[0].toString();
+				}
+				
+				title_field.text =
+				amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Title.toString();
+				setTitleFormat(titleFmt,amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::DetailPageURL);
+				disc_field.text = auth;
+				setDiscriptionFormat(discFmt,amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::DetailPageURL);
 			}
 			title_field.setTextFormat(titleFmt);
 			disc_field.setTextFormat (discFmt);
@@ -877,27 +921,67 @@ package {
 			
 			//引数で貰った2点間にラインを引く
 			var lines:SegmentSet = new SegmentSet();
-			scene.addChild(lines);
-			lines.addSegment(new LineSegment(
-			new Vector3D(x,y,z),new Vector3D(x2,y2,z2),0xEEEEEE,0xEEEEEE,4)
+			view.scene.addChild(lines);
+			lines.addSegment(
+				new LineSegment(new Vector3D(x,y,z),new Vector3D(x2,y2,z2),0xEEEEEE,0xEEEEEE,4)
 			);
 		}
 
-		/**指定したScene3D地点上にエッジを描画する*/
-		public function drawEdge(x:int,y:int,z:int) {
+		/**指定したScene3D地点上に指定された種類のエッジを描画する*/
+		public function drawEdge(x:int,y:int,z:int,src:String, top:Boolean) {
 			
-			[Embed(source="star.png")]
-			var ImageCls:Class; // 星の画像
+			var bmd; //アイコン画像
+			
+			if(src=="norm"){
+				[Embed(source="asset/norm.png")]
+				var normImg:Class;
+				bmd = new normImg().bitmapData;
+				if(top==true){
+					[Embed(source="asset/norm-top.png")]
+					var normImgT:Class;
+					bmd = new normImgT().bitmapData;
+				}
+			}else if(src=="img"){
+				[Embed(source="asset/img.png")]
+				var imgImg:Class;
+				bmd = new imgImg().bitmapData;
+				if(top==true){
+					[Embed(source="asset/img-top.png")]
+					var imgImgT:Class;
+					bmd = new imgImgT().bitmapData;
+				}
+			}else if(src=="doc"){
+				[Embed(source="asset/doc.png")]
+				var docImg:Class;
+				bmd = new docImg().bitmapData;
+				if(top==true){
+					[Embed(source="asset/doc-top.png")]
+					var docImgT:Class;
+					bmd = new docImgT().bitmapData;
+				}
+			}else if(src=="mv"){
+				[Embed(source="asset/mv-top.png")]
+				var mvImgT:Class;
+				bmd = new mvImgT().bitmapData;
+			}else{
+				[Embed(source="asset/ama.png")]
+				var amaImg:Class;
+				bmd = new amaImg().bitmapData;
+				if(top==true){
+					[Embed(source="asset/ama-top.png")]
+					var amaImgT:Class;
+					bmd = new amaImgT().bitmapData;
+				}
+			}
 					
 			//画像を表示
-			var bmd:BitmapData = new ImageCls().bitmapData;
 			var texture:BitmapTexture=new BitmapTexture(bmd);
 			var material:TextureMaterial=new TextureMaterial(texture);
 			material.alphaBlending=true;
 				
 			//ビルボード処理
-			var sprite3D:Sprite3D=new Sprite3D(material,200,200);
-			scene.addChild(sprite3D);
+			var sprite3D:Sprite3D=new Sprite3D(material,180,180);
+			view.scene.addChild(sprite3D);
 			sprite3D.x = x;
 			sprite3D.y = y;
 			sprite3D.z = z;
@@ -947,10 +1031,8 @@ package {
 		
 		/**Bitmapデータをリサイズする*/
 		public function resize(src:BitmapData, hRatio:Number, vRatio:Number):BitmapData{
-			
-			var res:BitmapData = new BitmapData(
-			Math.ceil(src.width * hRatio), Math.ceil(src.height * vRatio)
-			);
+			var res:BitmapData =
+				new BitmapData( Math.ceil(src.width * hRatio), Math.ceil(src.height * vRatio) );
 			res.draw(src, new Matrix(hRatio, 0, 0, vRatio), null, null, null, true);
 			return res;
 		}
