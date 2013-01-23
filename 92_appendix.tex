@@ -845,9 +845,9 @@ package {
 			//colの値がimgならば、numの値で指定された値をSummaryに置き換える
 			if(col=="img"){
 				title_field.text = imgXML.imgNS::Result[num].imgNS::Title;
-				setTitleFormat(titleFmt,imgXML.imgNS::Result[num].imgNS::Url);
+				setTitleFormat(titleFmt,imgXML.imgNS::Result[num].imgNS::RefererUrl);
 				disc_field.text = imgXML.imgNS::Result[num].imgNS::Summary;
-				setDiscriptionFormat(discFmt,imgXML.imgNS::Result[num].imgNS::Url);
+				setDiscriptionFormat(discFmt,imgXML.imgNS::Result[num].imgNS::RefererUrl);
 			}
 			
 			//colの値がdocならば、numの値で指定された値をSummaryに置き換える
