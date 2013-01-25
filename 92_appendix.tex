@@ -16,7 +16,12 @@
 \item ama.png (128x128px のpngファイル)
 \end{itemize}
 
-\section{main.as(ActionScript3.0)}
+これらソースコードパッケージの最新版はGithubの以下のURLにて公開している。 
+
+https://github.com/legnoh/ledoxea
+
+
+\section{Main.as(ActionScript3.0)}
 {\scriptsize
 \begin{verbatim}
 package {
@@ -903,7 +908,8 @@ package {
 					
 					//Authorが無いときはManufactureを使う
 					auth = 
-					amaXML[i].amaNS::Items.amaNS::Item[amaNum].amaNS::ItemAttributes.amaNS::Manufacturer[0].toString();
+					amaXML[i].amaNS::Items.amaNS::Item[amaNum]
+					　　　　.amaNS::ItemAttributes.amaNS::Manufacturer[0].toString();
 				}
 				
 				title_field.text =
@@ -1067,7 +1073,7 @@ class State extends Sprite{
  }
 
 
-\section{app.xml(XML)}
+\section{ledoxea-app.xml(XML)}
 {\scriptsize
 \begin{verbatim}
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -1075,11 +1081,23 @@ class State extends Sprite{
     <id>ledoxea</id>
     <versionNumber>1.0.0</versionNumber>
     <filename>LEDOXEA</filename>
-    <description>Ledoxea is 3D view e-learning searcher.</description>
+    <description>LEDOXEA is 3D view e-learning searcher.</description>
+    <!-- To localize the description, use the following format for the description element.
+  <description>
+    <text xml:lang="en">LEDOXEA is 3D view e-learning searcher.</text>
+    <text xml:lang="ja">LEDOXEAは、3D表示型のeラーニングドキュメント検索エンジンです。</text>
+  </description>
+  -->
     <name>LEDOXEA</name>
+    <!-- To localize the name, use the following format for the name element.
+  <name>
+    <text xml:lang="en">LEDOXEA</text>
+    <text xml:lang="ja">LEDOXEA</text>
+  </name>
+  -->
     <copyright></copyright>
     <initialWindow>
-        <content>Ledoxea.swf</content>
+        <content>ledoxea.swf</content>
         <systemChrome>standard</systemChrome>
         <transparent>false</transparent>
         <visible>true</visible>
@@ -1092,18 +1110,19 @@ class State extends Sprite{
     <customUpdateUI>false</customUpdateUI>
     <allowBrowserInvocation>false</allowBrowserInvocation>
     <icon>
-        <image36x36>icon_036.png</image36x36>
-        <image48x48>icon_048.png</image48x48>
-        <image72x72>icon_072.png</image72x72>
+        <image36x36>icon/icon_036.png</image36x36>
+        <image48x48>icon/icon_048.png</image48x48>
+        <image72x72>icon/icon_072.png</image72x72>
     </icon>
     <android>
-        <colorDepth>16bit</colorDepth>
-        <manifestAdditions><![CDATA[<manifest>
+        <manifestAdditions>
+		<![CDATA[<manifest>
 		<uses-permission android:name="android.permission.INTERNET"/>
-		</manifest>]]></manifestAdditions>
+		</manifest>]]>
+		</manifestAdditions>
     </android>
-    <versionLabel></versionLabel>
     <supportedLanguages>en ja</supportedLanguages>
+    <versionLabel></versionLabel>
 </application>
 \end{verbatim}
  }
